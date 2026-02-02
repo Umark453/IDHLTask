@@ -7,5 +7,6 @@ namespace DeveloperAssessment.Web
         public string Title { get; set; }
         public string Image { get; set; }
         public string HtmlContent { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

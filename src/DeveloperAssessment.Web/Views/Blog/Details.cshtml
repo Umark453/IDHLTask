@@ -15,5 +15,24 @@
         <hr />
         @Html.Raw(Model.HtmlContent)
         <hr />
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            <h3>Comments (@Model.Comments.Count)</h3>
+            @foreach (var c in Model.Comments)
+            {
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">@c.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@c.Date.ToShortDateString()</h6>
+                        <p class="card-text">@c.Message</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h3>Comments (0)</h3>
+            <p>No comments yet.</p>
+        }
     </div>
 </div>
