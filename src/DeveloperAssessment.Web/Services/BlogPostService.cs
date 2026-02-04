@@ -1,6 +1,5 @@
+using DeveloperAssessment.Web.Models;
 using System.Text.Json;
-using DeveloperAssessment.Web;
-using Microsoft.AspNetCore.Hosting;
 
 namespace DeveloperAssessment.Web.Services
 {
@@ -35,6 +34,39 @@ namespace DeveloperAssessment.Web.Services
         {
             var posts = GetAllBlogPosts();
             return posts.FirstOrDefault(p => p.Id == id);
+        }
+
+        public bool AddComment(int postId, Comment comment)
+        {
+            if (!File.Exists(_jsonFilePath))
+            {
+                return false;
+            }
+
+            var json = File.ReadAllText(_jsonFilePath);
+            var data = JsonSerializer.Deserialize<BlogPostData>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new BlogPostData { BlogPosts = new List<BlogPost>() };
+
+            var post = data.BlogPosts?.FirstOrDefault(p => p.Id == postId);
+            if (post == null)
+            {
+                return false;
+            }
+
+            post.Comments ??= new List<Comment>();
+            comment.Date = comment.Date == default ? DateTime.UtcNow : comment.Date;
+            post.Comments.Add(comment);
+
+            var writeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            var updatedJson = JsonSerializer.Serialize(data, writeOptions);
+            File.WriteAllText(_jsonFilePath, updatedJson);
+            return true;
         }
     }
 }

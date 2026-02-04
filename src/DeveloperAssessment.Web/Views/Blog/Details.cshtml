@@ -1,4 +1,4 @@
-@model DeveloperAssessment.Web.BlogPost
+@model DeveloperAssessment.Web.Models.BlogPost
 @{
     ViewData["Title"] = Model.Title;
 }
@@ -15,6 +15,29 @@
         <hr />
         @Html.Raw(Model.HtmlContent)
         <hr />
+        <div class="card my-4">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+                <form asp-action="AddComment" asp-controller="Blog" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="Name" name="Name" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="EmailAddress" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="EmailAddress" name="EmailAddress" required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Message" class="form-label">Comment</label>
+                        <textarea id="Message" name="Message" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
         @if (Model.Comments != null && Model.Comments.Any())
         {
             <h3>Comments (@Model.Comments.Count)</h3>
@@ -36,3 +59,6 @@
         }
     </div>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

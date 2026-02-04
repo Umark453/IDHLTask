@@ -1,5 +1,4 @@
-using DeveloperAssessment.Web;
-using System.Collections.Generic;
+using DeveloperAssessment.Web.Models;
 
 namespace DeveloperAssessment.Web.Services
 {
@@ -7,5 +6,6 @@ namespace DeveloperAssessment.Web.Services
     {
         List<BlogPost> GetAllBlogPosts();
         BlogPost GetBlogPost(int id);
+        bool AddComment(int postId, Comment comment);
     }
 }

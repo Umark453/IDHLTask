@@ -1,4 +1,4 @@
-namespace DeveloperAssessment.Web
+namespace DeveloperAssessment.Web.Models
 {
     public class BlogPost
     {
