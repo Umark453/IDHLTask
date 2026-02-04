@@ -7,5 +7,6 @@ namespace DeveloperAssessment.Web.Services
         List<BlogPost> GetAllBlogPosts();
         BlogPost GetBlogPost(int id);
         bool AddComment(int postId, Comment comment);
+        bool AddReply(int postId, int commentIndex, Comment reply);
     }
 }

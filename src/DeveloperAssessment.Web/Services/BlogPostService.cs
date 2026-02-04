@@ -68,5 +68,38 @@ namespace DeveloperAssessment.Web.Services
             File.WriteAllText(_jsonFilePath, updatedJson);
             return true;
         }
+
+        public bool AddReply(int postId, int commentIndex, Comment reply)
+        {
+            if (!File.Exists(_jsonFilePath))
+            {
+                return false;
+            }
+            var json = File.ReadAllText(_jsonFilePath);
+            var data = JsonSerializer.Deserialize<BlogPostData>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new BlogPostData { BlogPosts = new List<BlogPost>() };
+
+            var post = data.BlogPosts?.FirstOrDefault(p => p.Id == postId);
+            if (post == null || post.Comments == null || commentIndex < 0 || commentIndex >= post.Comments.Count)
+            {
+                return false;
+            }
+
+            var comment = post.Comments[commentIndex];
+            comment.Replies ??= new List<Comment>();
+            reply.Date = reply.Date == default ? DateTime.UtcNow : reply.Date;
+            comment.Replies.Add(reply);
+
+            var writeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            var updatedJson = JsonSerializer.Serialize(data, writeOptions);
+            File.WriteAllText(_jsonFilePath, updatedJson);
+            return true;
+        }
     }
 }

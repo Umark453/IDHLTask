@@ -41,13 +41,53 @@
         @if (Model.Comments != null && Model.Comments.Any())
         {
             <h3>Comments (@Model.Comments.Count)</h3>
-            @foreach (var c in Model.Comments)
+            @for (var i = 0; i < Model.Comments.Count; i++)
             {
-                <div class="card mb-2">
+                var c = Model.Comments[i];
+                <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">@c.Name</h5>
                         <h6 class="card-subtitle mb-2 text-muted">@c.Date.ToShortDateString()</h6>
                         <p class="card-text">@c.Message</p>
+                    </div>
+                    @if (c.Replies != null && c.Replies.Any())
+                    {
+                        <div class="px-4 pb-3">
+                            <h6 class="mt-2">Replies (@c.Replies.Count)</h6>
+                            @foreach (var r in c.Replies)
+                            {
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <strong>@r.Name</strong>
+                                        <span class="text-muted">(@r.Date.ToShortDateString())</span>
+                                        <p class="mb-0">@r.Message</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    <div class="card-footer">
+                        <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#replyForm_@i" aria-expanded="false" aria-controls="replyForm_@i">Reply</button>
+                        <div id="replyForm_@i" class="collapse mt-2">
+                            <form asp-action="AddReply" asp-controller="Blog" asp-route-id="@Model.Id" asp-route-index="@i" method="post">
+                                @Html.AntiForgeryToken()
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="ReplyName_@i" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="ReplyName_@i" name="Name" required />
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label for="ReplyEmail_@i" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="ReplyEmail_@i" name="EmailAddress" required />
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="ReplyMessage_@i" class="form-label">Reply</label>
+                                    <textarea id="ReplyMessage_@i" name="Message" class="form-control" rows="2" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Submit Reply</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             }

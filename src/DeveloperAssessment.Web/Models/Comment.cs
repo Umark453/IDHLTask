@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace DeveloperAssessment.Web.Models
 {
@@ -15,5 +16,7 @@ namespace DeveloperAssessment.Web.Models
 
         [Required]
         public string Message { get; set; }
+
+        public List<Comment> Replies { get; set; }
     }
 }

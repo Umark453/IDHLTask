@@ -47,5 +47,29 @@ namespace DeveloperAssessment.Web.Controllers
             }
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpPost("blog/{id}/comment/{index}/reply")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddReply(int id, int index, Comment reply)
+        {
+            if (string.IsNullOrWhiteSpace(reply?.Name) ||
+                string.IsNullOrWhiteSpace(reply?.EmailAddress) ||
+                string.IsNullOrWhiteSpace(reply?.Message))
+            {
+                var details = _blogPostService.GetBlogPost(id);
+                if (details == null)
+                {
+                    return NotFound();
+                }
+                return View("Details", details);
+            }
+
+            var ok = _blogPostService.AddReply(id, index, reply);
+            if (!ok)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Details), new { id });
+        }
     }
 }
